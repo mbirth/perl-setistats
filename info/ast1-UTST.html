@@ -1,0 +1,66 @@
+<title>Umwandlung UT in Sternzeit</title>
+<h1>Umwandlung UT in Sternzeit</h1>
+
+<dl>
+<dt><b>Sie geben ein</b>:
+    <dd><i>UT</i> (Universal Time)
+        (<font size=-1>UT1, nicht UTC: |UT1-UTC|&lt;0.7s</font>)
+    <dd>[evtl] gewünschtes Datum
+    <dd>[evtl] geographische Länge <i>L</i> des Ortsmeridians
+<p>
+<dt><b>Sie erhalten als Ergebnis</b>:
+    <dd>mittlere Sternzeit: <i>GMST</i> (Greenwich), <i>LMST</i> (lokal)
+    <dd>Equation of Equinoxes <i>EQE</i> zur Ermittlung der entsprechenden
+        scheinbaren Sternzeit
+    <dd>scheinbare Sternzeit: <i>GAST</i> (Greenwich), <i>LAST</i> (lokal)
+    <dd>den Zeiten entsprechende Stundenwinkel
+</dl>
+
+<hr>
+
+<form action="http://habicht.bauv.unibw-muenchen.de/ex-scherer/ast2-UTST.html"
+method=POST>
+
+<dl>
+<dt>
+<b>Eingabewerte:</b> (Jahreszahlen gültig ab <u>1985</u>)
+<p>
+ <dd>
+ <b>UT</b> <input name="uth" size=2 maxlength=2 value="13"> h
+ <input name="utm" size=2 maxlength=2 value="23"> m
+ <input name="uts" size=6 maxlength=6 value="15.000"> s (<font size=-1>UT1, nicht UTC</font>)
+ <dd>
+ <b>Datum</b> <input name="dd" size=2 maxlength=2 value="18"> .
+ <input name="dm" size=2 maxlength=2 value="06"> .
+ <input name="dj" size=4 maxlength=4 value="1999">
+<dd>
+<b>L</b> <input name="lg" size=3 maxlength=3 value="000"> °
+         <input name="lm" size=2 maxlength=2 value="00"> '
+         <input name="ls" size=7 maxlength=7 value="00.0000"> "
+         <input name="lx" size=1 maxlength=1 value="E">,
+         geographische Länge Ortsmeridian
+</dl>
+
+<hr>
+
+<input type="submit" value="Berechnen">
+<input type="reset" value="Rücksetzen">
+
+</form>
+
+<hr>
+
+<a href="http://habicht.bauv.unibw-muenchen.de/ex-scherer/scherer.html"
+   onmouseover="window.status='HomePage Scherer'"
+   onmouseout="window.status=''">
+<img border=0
+     alt="HomePage Scherer"
+     src=http://habicht.bauv.unibw-muenchen.de/gif/Home-scherer.gif
+align=middle></a>
+Ende der Berechnungen, zurück zu meiner
+<a href="http://habicht.bauv.unibw-muenchen.de/ex-scherer/scherer.html">
+HomePage</a>
+
+<hr>
+<address>Institut für Geodäsie | Universität der Bundeswehr München</address> 
+Bernd Scherer <b>a91alvub@unibw-muenchen.de</b> [20-Oct-1997]

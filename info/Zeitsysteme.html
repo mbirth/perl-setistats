@@ -1,0 +1,242 @@
+<html>
+
+<head>
+<title>Vertiefte Informationen Geodätische Astronomie, Zeitsysteme</title>
+<link rel=stylesheet href=/scherer/css/astro.css type="text/css">
+</head>
+
+<body>
+<h1>Geodätische Astronomie, Zeitsysteme</h1>
+
+<dl>
+<dt>Zeitsysteme in der Geodätischen Astronomie
+<dd><a href="#UT">Universal Time</a> UT
+<dd><a href="#GMST">Greenwich Sidereal Time</a> GMST, GAST
+<dd><a href="#LMST">Local Sidereal Time</a> LMST, LAST
+<dd><a href="#Rechnung">Berechnungen</a>
+</dl>
+
+<p class=bs>
+
+In der Astronomie benötigt man verschiedene Zeitsysteme für die Darstellung
+der sich zeitlich verändernden Verhältnisse zwischen den Himmelskörpern und
+der Situation auf der Erde als Beobachtungsplattform. Im alltäglichen Leben
+spielt dabei die <strong>Sonnenzeit</strong> eine zentrale Rolle, während zur
+Beschreibung der Himmelsmechanik sich die <strong>Sternzeit</strong> weit
+besser eignet.
+
+<p class=bs>
+
+Der wesentliche Unterschied beider Zeitsysteme ist der Bezug: 24h Sonnenzeit
+ist der Zeitabschnitt zweier aufeinanderfolgender oberer Kulminationen der
+Sonne, 24h Sternzeit ist der Zeitabschnitt zweier aufeinanderfolgender oberer
+Kulminationen eines Sterns. Infolge der Translation der Erde um die Sonne
+relativ zum System der Sterne variieren die Zeitsysteme jährlich um 1 Tag, also
+ca 4m pro Tag. Dabei gilt:
+
+<p>
+
+<a name="(1)"><table width="100%" border=0>
+<tr>
+<td class=l>24h Sternzeit = 23h56m04s Sonnenzeit</td>
+<td class=r>(1)</td>
+</table></a>
+
+<p class=bs>
+
+Als Bezugsrichtung der Sternzeit wird anstatt eines Sterns der Frühlingspunkt
+verwendet. Er befindet sich auf der Schnittgeraden von Himmelsäquator- und
+Ekliptikebene.
+
+<p class=bs>
+
+Hinsichtlich der Zeiten kann man noch zwischen <strong>mittleren</strong> und
+<strong>wahren</strong> Zeitangaben unterscheiden. Im Rahmen der mittleren
+Zeitangaben wird die Bewegung der Referenz (Sonne/Frühlingspunkt) unter der
+Annahme
+einer ungestörten Ekliptik beschrieben (einfaches Präzessionsmodell), während
+die wahren Zeitangaben aus der zusätzlichen Berücksichtigung des
+Nutationsmodells resultieren. Beide Angaben unterscheiden sich:
+
+<dl>
+<dt>im Fall der Sternzeit
+<dd>um die <em>Equation of Equinox</em> EqE
+<p>
+<dt>im Fall der Sonnenzeit
+<dd>um die <em>Equation of Time</em> EqT (Zeitgleichung)
+</dl>
+
+<hr>
+
+<a name="UT"><h2>UT</h2></a>
+
+<p class=bs>
+
+UT (Universal Time) ist eine definierte gleichförmige Zeit (Atomuhren), die auf
+das Zeitsystem Sonnenzeit bezogen ist. UT stellt eine Annäherung an die
+mittlere Sonnenzeit UT1 dar, die jedoch nicht gleichförmig ist. Infolgedessen
+muß die gleichförmige Zeit der Atomuhren um ganze Schaltsekunden verändert
+werden, falls |UT-UT1|>0.7s wird. Die aktuellen Unterschiede zwischen UT und UT1
+kann man den ERP-Dateien (earth rotation parameters) des
+<a href="http://hpiers.obspm.fr/">IERS</a> entnehmen.
+
+<p class=bs>
+
+Zeitangaben in UT beziehen sich auf den Nullmeridian von Greenwich. UT1 wird
+auch GMT (Greenwich Mean Time) genannt. Die zugehörige wahre Zeitangabe GAT
+(Greenwich Apparent Time) unterscheidet sich von GMT um die Zeitgleichung EqT je
+nach Jahreszeit um mehrere Minuten. Analog definiert sind die lokalen
+Sonnenzeiten LMT (local mean time) und LAT (local apparent time). Sie bestimmen
+sich zu:
+
+<p>
+
+<a name="(2)"><table width="100%" border=0>
+<tr>
+<td class=l>{LMT,LAT} = {GMT,GAT} + <i>lambda</i>/15</td>
+<td class=r>(2)</td>
+</table></a>
+
+<p class=bs>
+
+mit der geografischen Länge <i>lambda</i> des Ortsmeridians in [°]. Der aktuelle
+Wert der Zeitgleichung EqT kann z.B. dem <quote>Star Almanac for Land
+Surveyors</quote> entnommen werden.
+
+<p class=bs>
+
+Bei der astro-geodätischen Beobachtung wird im folgenden davon ausgegangen, daß
+UT durch den Einsatz entsprechender Zeitzeichenempfänger (z.B. Zeitzeichen DCF77
+der <a href="http://www.ptb.de/deutsch/org/4/43/hp.htm">Physikalisch-Technischen
+Bundesanstalt (PTB) in Braunschweig</a>) vorliegt.
+
+<p>
+
+<hr>
+
+<a name="GMST"><h2>GMST / GAST</h2></a>
+
+<p class=bs>
+
+Die Greenwicher Sternzeitangaben GMST und GAST berechnen sich aus dem Winkel
+(genannt <quote>Stundenwinkel</quote> zwischen der raumfesten Richtung zum
+Frühlingspunkt und dem Nullmeridian von Greenwich, der an der Erdrotation
+teilnimmt. Der Unterschied zwischen der mittleren und der wahren Zeitdarstellung
+ergibt sich aus dem Grad der Modellierung der Erdrotation (ohne/mit
+Nutationsmodell) und wird durch die EqE beschrieben.
+
+<p class=bs>
+
+Wie die Sonnenzeit <a href="#UT">UT</a> bildet der Nullmeridian von Greenwich
+die Bezugsrichtung im äquatorialen Koordinatensystem. Zwischen UT und GMST
+existiert eine einfache Beziehung, die auf den Bezugsepoche J.2000 (01-Jan-2000,
+12.00UT) aufsetzt:
+
+<p>
+
+<a name="(3)"><table width="100%" border=0>
+<tr>
+<td class=l>GMST = 6h41m50.548s + UT + (8640184.812866 <i>T</i>
+                 + 0.093104 <i>T</i><sup>2</sup>
+                 - 0.0000062 <i>T</i><sup>3</sup>)s</td>
+<td class=r>(3)</td>
+</table></a>
+
+<p class=bs>
+
+Dabei bezeichnet <i>T</i> den zeitlichen Abstand des aktuellen Zeitpunktes UT
+von der Bezugsepoche in Julianischen Jahrhunderten zu je 36525 Tagen, wie er
+nach <a href="#(4)">(4)</a> berechnet werden kann. Für den 01-Jul-1998
+beispielsweise beträgt <i>T</i> = -1.500.
+
+<p>
+
+<a name="(4)"><table width="100%" border=0>
+<tr>
+<td class=l><i>T</i> = (<i>JD</i> - 2451545.0)/36525</td>
+<td class=r>(4)</td>
+</table></a>
+
+<p class=bs>
+
+Zur Berechnung eignet sich besonders die Verwendung des Julianischen
+Datums <i>JD</i> <a href="#(5)">(5)</a> für den aktuellen Zeitpunkt. Für die
+Ableitung von <i>T</i> ist es ausreichend, die UT-Zeit der Atomuhr einzusetzen.
+Strenggenommen muß das Zeitmaß UT1 in die Formeln <a href="#(5)">(5)</a> Eingang
+finden.
+
+<p class=bs>
+
+Die Eingabe der UT-Zeit wird in ihre Bestandteile zerlegt:
+
+<ul>
+<li><i>h</i> = UT-Zeit in dezimalen Stunden
+<li><i>d</i> = Tag
+<li><i>m</i> = Monat
+<li><i>j</i> = Jahr
+</ul>
+
+<p class=bs>
+
+Falls Umwandlungen für die Monate Januar (<i>m</i>=1) oder Februar (<i>m</i>=2)
+berechnet werden sollen, müssen folgende Zuordnungen für die Monatszahl <i>m</i>
+und Jahreszahl <i>j</i> geändert werden (Problematik: Schaltjahre):
+
+<ul>
+<li><i>m</i> := <i>m</i> + 12
+<li><i>j</i> := <i>j</i> - 1
+</ul>
+
+<p class=bs>
+
+Dann gilt für das Julianische Datum <i>JD</i>:
+
+<p>
+
+<a name="(5)"><table width="100%" border=0>
+<tr>
+<td class=l><i>A</i> = int(<i>j</i>/100<br>
+            <i>B</i> = 2 - <i>A</i> + int(<i>A</i>/4)<br>
+            <i>C</i> = <i>h</i>/24<br>
+            <i>JD</i> = int(365.25<i>j</i>) + int(30.6001(<i>m</i>+1) + <i>d</i>
+            + 1720994.5 + <i>B</i> + <i>C</i></td>
+<td class=r id=mehrfach>(5)</td>
+</table></a>
+
+<p>
+
+<hr>
+
+<a name="LMST"><h2>LMST / LAST</h2></a>
+
+<p class=bs>
+
+Die lokalen Sternzeiten LMST und LAST sind analog zu den Greenwicher Sternzeiten
+definiert. Lediglich der Bezugsmeridian ist verschieden, im Fall der lokalen
+Sternzeiten bildet der Ortsmeridian mit der geografischen Länge <i>lambda</i>
+die Referenz für den Stundenwinkel.
+
+<p class=bs>
+
+Die Umrechnung zwischen lokalen und Greenwicher Sternzeiten erfolgt unter
+sinngemäßer Anwendung von <a href="#(2)">(2)</a>.
+
+<p>
+
+<hr>
+
+<a name="Rechnung"><h2>Berechnungen</h2></a>
+
+<ul>
+<li>Konversion der Zeitsysteme
+<a href="http://habicht.bauv.unibw-muenchen.de/ex-scherer/ast1-UTST.html">UT
+&lt;-&gt; Sternzeit</a>
+<li>Berechnung
+<a href="http://habicht.bauv.unibw-muenchen.de/ex-scherer/ast1-JD.html">
+Julianisches Datum <i>JD</i></a>
+</ul>
+
+<hr>
+
+<address>Institut für Geodäsie | Universität der Bundeswehr München</address>
+Bernd Scherer <b>a91alvub@unibw-muenchen.de</b> [01-Jul-1998]

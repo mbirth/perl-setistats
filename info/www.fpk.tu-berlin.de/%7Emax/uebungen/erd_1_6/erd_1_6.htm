@@ -1,0 +1,280 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="Generator" CONTENT="Microsoft Word 97">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.01 [de] (Win95; I) [Netscape]">
+   <TITLE>Universal- und Siderial Time</TITLE>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#DCF3DF" LINK="#7C333F" VLINK="#7C333F" ALINK="#FF0000">
+
+<CENTER><FONT SIZE=+4>U</FONT><FONT SIZE=+3>niversal- und </FONT><FONT SIZE=+4>S</FONT><FONT SIZE=+3>iderial
+</FONT><FONT SIZE=+4>T</FONT><FONT SIZE=+3>ime</FONT></CENTER>
+
+<HR>
+
+<P><B><FONT SIZE=+1>1.Aufgabe:</FONT></B>
+
+<P>Zur Umrechnung der Universal Time in das Julianische Datum ist ein Programm
+zu schreiben, dabei soll eine Berechnung f&uuml;r alle Tage nach dem 01.03.1600
+m&ouml;glich sein.
+<PRE>/*****************************************************************
+**&nbsp; Titel:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Julianisches Datum&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **
+**&nbsp; Programmiersprache: Ansi-C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **
+**&nbsp; Autor:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Michael Gendt&nbsp; 171766&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **
+**&nbsp; Quellcode:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; julian.c&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **
+**&nbsp; Erstellungsdatum:&nbsp;&nbsp; 26.06.1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **
+**&nbsp; Letzte Aenderung:&nbsp;&nbsp; 26.06.1998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **
+**&nbsp; Grund der Programmierung: Uebung 6 - Erdmessung I&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **
+*****************************************************************/
+#include "stdio.h"
+#include "stdlib.h"
+#include "math.h"
+
+typedef struct
+{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int day,mon,year,h,min;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; double sec;
+}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UT;
+
+double UT_to_JD(UT time);
+double UT_to_JD2(UT time);
+
+void main()
+{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UT time_UT={1,1,1600,12,00,00.0};
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; double time_JD;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; time_JD=UT_to_JD(time_UT);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf("\n\ntime_UT = %02i.%02i.%02i %02i.%02i.%06.3lf Uhr",time_UT.day,time_UT.mon
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ,time_UT.year,time_UT.h,time_UT.min,time_UT.sec);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf("\ntime_JD = %13.3lf",time_JD);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; time_JD=UT_to_JD2(time_UT);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf("\ntime_JD = %13.3lf",time_JD);
+}
+
+double UT_to_JD(UT time)
+{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int mon[]={0,0,31,59,90,120,151,181,212,243,273,304,334},y_d,sj;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; double time_JD=2305447.0; /*** 00.01.1600 12.00.00 Uhr ***/
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; y_d=time.year-1600;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (y_d&lt;0) {printf("Berechnung nicht m”glich year&lt;1600");exit(0);}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; time_JD += time.day + mon[time.mon] + y_d*365.0;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; time_JD += floor(y_d/4) - floor(y_d/100) + floor(y_d/400) + 1;
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ((int)fmod(y_d,4)==0) sj=1;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ((int)fmod(y_d,100)==0) sj=0;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ((int)fmod(y_d,400)==0) sj=1;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ((time.mon&lt;3)&amp;&amp;(sj==1)) time_JD--;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; time_JD += (time.h+time.min/60.+time.sec/3600.-12.)/24;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return time_JD;
+}</PRE>
+Nutz man die Eigenschaft aus, da&szlig; man nach Teilung eines Integerwertes
+auf jeden Fall ein Integer-Wert erh&auml;lt (Nachkommastellen werden abgehackt),
+kann man folgende Funktion verwenden. Zudem wurde eine andere M&ouml;glichkeit
+der Abfrage eines m&ouml;glichen Schaltjahres genutzt (schnellere Rechenzeit).
+<PRE>double UT_to_JD2(UT time)
+{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int mon[]={0,0,31,59,90,120,151,181,212,243,273,304,334},y_d;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; double time_JD=2305447.0; /*** 00.01.1600 12.00.00 Uhr ***/
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; y_d=time.year-1600;
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (y_d&lt;0)&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {&nbsp; printf("Berechnung nicht moeglich year&lt;1600");
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; exit(0);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; time_JD += time.day + mon[time.mon]+ y_d*365.0;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; time_JD += y_d/4 - y_d/100 + y_d/400 + 1;
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ((time.mon&lt;3)&amp;&amp;((int)fmod(y_d,4)==0)&amp;&amp;((y_d/100-4*y_d/400)!=0))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; time_JD--; /*** Abfrage Schaltjahr***/
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; time_JD += (time.h+time.min/60.+time.sec/3600.-12.)/24;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return time_JD;
+}
+
+
+Ergebnis: time_JD = 2445889,906</PRE>
+<B><FONT SIZE=+1>2.Aufgabe:</FONT></B>
+
+<P>F&uuml;r einen Punkt mit der L&auml;nge&nbsp;<IMG SRC="Image49.gif" HEIGHT=18 WIDTH=13>=13&deg;05’37’’.000
+und der Zeit 25.06.1998 23<SUP>h</SUP>06<SUP>min</SUP>35<SUP>s</SUP>.000
+MESZ (Mitteleurop&auml;innsche Sommerzeit) soll die scheinbare (wahre)
+Sternzeit (LAST) berechnet werden.
+
+<P>F&uuml;r die Berechnung der Local Apperent Sidereal Time (LAST) l&auml;&szlig;t
+sich folgende Formel angeben:
+<UL>
+<TABLE BORDER=0 COLS=1 WIDTH="165" BGCOLOR="#000000" >
+<TR><TD>
+<TABLE BORDER=0 COLS=1 WIDTH="163" BGCOLOR="#FFBB44" >
+<TR><TD>
+<IMG SRC="Image50.gif" HEIGHT=18 WIDTH=161>
+</TD></TR></TABLE></TD></TR></TABLE>
+</UL>
+dabei sind:
+<UL>
+<TABLE BORDER=0 COLS=1 WIDTH="484" BGCOLOR="#000000" >
+<TR><TD>
+<TABLE BORDER=0 COLS=1 WIDTH="482" BGCOLOR="#FFBB44" >
+<TR><TD>
+<IMG SRC="Image51.gif" HEIGHT=21 WIDTH=480>
+</TD></TR></TABLE></TD></TR></TABLE>
+<BR>&nbsp;
+<UL>Umrechnung der Universal Time in die Greenwich Mean Sidereal Time (GAST
+= scheinbare Sternzeit von Greenwich) f&uuml;r die ganzen Tage
+
+<P><IMG SRC="Image52.gif" HEIGHT=25 WIDTH=348></UL>
+&nbsp;
+
+<P>
+<TABLE BORDER=0 COLS=1 WIDTH="200" BGCOLOR="#000000" >
+<TR><TD><TABLE BORDER=0 COLS=1 WIDTH="198" BGCOLOR="#FFBB44" >
+<TR><TD>
+<IMG SRC="Image53.gif" HEIGHT=24 WIDTH=196>
+</TD></TR></TABLE></TD></TR></TABLE>
+</UL>
+
+<DIR>
+<DIR>Umrechnung der Tagesbruchteile von UT nach GAST, dabei wird ber&uuml;cksichtigt,
+da&szlig; ein Sterntag rund 4<SUP>min</SUP> k&uuml;rzer als ein Sonnentag
+ist. Dies beruht auf der Tatsache, da&szlig; sich die Erde pro Tag (360/365)&deg;
+auf ihrer Bahn fortbewegt (Rotation um die Sonne).
+
+<P>&nbsp;</DIR>
+<TABLE BORDER=0 COLS=1 WIDTH="156" BGCOLOR="#000000" >
+<TR><TD><TABLE BORDER=0 COLS=1 WIDTH="154" BGCOLOR="#FFBB44" >
+<TR><TD>
+<IMG SRC="Image54.gif" HEIGHT=22 WIDTH=152>
+</TD></TR></TABLE></TD></TR></TABLE>
+</DIR>
+
+<DIR>
+<DIR>Ber&uuml;cksichtigung der Nutation (Berechnung der Winkel siehe &Uuml;bung
+4 - Nutation und Pr&auml;zession)
+<BR>&nbsp;</DIR>
+
+
+<P>
+<TABLE BORDER=0 COLS=1 WIDTH="145" BGCOLOR="#000000" >
+<TR><TD><TABLE BORDER=0 COLS=1 WIDTH="143" BGCOLOR="#FFBB44" >
+<TR><TD>
+<IMG SRC="Image55.gif" HEIGHT=21 WIDTH=141>
+</TD></TR></TABLE></TD></TR></TABLE>
+</DIR>
+
+<DIR>
+<DIR>Transformation von GAST in die lokale Zeit (LAST)
+<BR>&nbsp;</DIR>
+</DIR>
+Zun&auml;chst m&uuml;ssen wir beachten, da&szlig; uns die Zeit nicht in
+UT gegeben ist, sondern f&uuml;r die MESZ, es sollte deshalb die Transformation
+<UL>UTC = MESZ - 2h</UL>
+durchgef&uuml;hrt werden. In unserem Fall erhalten wir:
+<UL>UTC = 25.06.1998 21<SUP>h</SUP>06<SUP>min</SUP>35<SUP>s</SUP>.000</UL>
+F&uuml;r die Berechnung von A wird als erstes das julianische Datum von&nbsp;<IMG SRC="Image56.gif" HEIGHT=25 WIDTH=82 ALIGN=ABSCENTER>
+<BR>ben&ouml;tigt.
+<UL><IMG SRC="Image57.gif" HEIGHT=25 WIDTH=113 ALIGN=ABSBOTTOM>= 2450989,5</UL>
+Damit ergibt sich f&uuml;r&nbsp;<IMG SRC="Image58.gif" HEIGHT=18 WIDTH=20 ALIGN=ABSCENTER>
+<UL><IMG SRC="Image113.gif" HEIGHT=21 WIDTH=124></UL>
+und f&uuml;r A folgt
+<UL>A = 18<SUP>h</SUP>11<SUP>min</SUP>44<SUP>s</SUP>,0416.</UL>
+F&uuml;r B erhalten wir
+<UL>B = 1,00273790935079 <SUP>.</SUP> 21<SUP>h</SUP>06<SUP>min</SUP>35<SUP>s</SUP>.000
+= 21<SUP>h</SUP>10<SUP>min</SUP>03<SUP>s</SUP>.0674</UL>
+Daraus ergibt sich die Greenwich mean sidereal time
+<UL>GMST = A+B = 15<SUP>h</SUP>21<SUP>min</SUP>47<SUP>s</SUP>.1090</UL>
+Im Anschlu&szlig; k&ouml;nnen wir den Einflu&szlig; der Nutation berechnen
+und auf die GMST anbringen. Die Nutationswinkel&nbsp;<IMG SRC="Image60.gif" HEIGHT=21 WIDTH=26 ALIGN=ABSCENTER>
+und&nbsp;<IMG SRC="Image61.gif" HEIGHT=22 WIDTH=64 ALIGN=ABSCENTER>lassen
+sich wie in &Uuml;bung 4 gezeigt in Abh&auml;ngigkeit von der Zeit und
+mit Hilfe von Koeffizienten berechnen. F&uuml;r die Zeit t nehmen wir die
+tats&auml;chliche Zeitdifferenz zur Basisepoche an, also nicht die Differenz
+zu 0.00 Uhr.
+
+<P>F&uuml;r unseren Fall erhalten wir:
+<DIR><IMG SRC="Image62.gif" HEIGHT=24 WIDTH=330></DIR>
+und damit
+<UL><IMG SRC="Image114.gif" HEIGHT=45 WIDTH=364></UL>
+Daraus folgt f&uuml;r EoE:
+<UL>EoE = -00<SUP>h</SUP>00<SUP>min</SUP>00<SUP>s</SUP>.4393</UL>
+Durch Addition mit der GMST erhalten wir die GAST (Greenwich Apparent Sidereal
+Time)
+<UL>
+<TABLE BORDER=0 COLS=1 WIDTH="302" BGCOLOR="#000000" >
+<TR><TD><TABLE BORDER=0 COLS=1 WIDTH="300" BGCOLOR="#FFDD44" >
+<TR><TD>
+GAST = GMST + EoE = 15<SUP>h</SUP>21<SUP>min</SUP>46<SUP>s</SUP>.6697
+</TD></TR></TABLE></TD></TR></TABLE>
+,</UL>
+die um die L&auml;nge gedreht werden mu&szlig;, um LAST zu erhalten.
+<UL>
+LAST = GAST +&nbsp;<IMG SRC="Image64.gif" HEIGHT=18 WIDTH=13> = 15<SUP>h</SUP>21<SUP>min</SUP>46<SUP>s</SUP>.6697
++ 00<SUP>h</SUP>52<SUP>min</SUP>22<SUP>s</SUP>.4667<U></U>
+
+<P>
+<TABLE BORDER=0 COLS=1 WIDTH="202" BGCOLOR="#000000" >
+<TR><TD><TABLE BORDER=0 COLS=1 WIDTH="200" BGCOLOR="#FFDD44" >
+<TR><TD>
+LAST = 16<SUP>h</SUP>14<SUP>min</SUP>09<SUP>s</SUP>.136
+</TD></TR></TABLE></TD></TR></TABLE></UL>
+<P><B><FONT SIZE=+1>3.Aufgabe:</FONT></B>
+
+<P>F&uuml;r einen Punkt mit der L&auml;nge&nbsp;<IMG SRC="Image65.gif" HEIGHT=18 WIDTH=13>=13&deg;20’50’’.000
+und der scheinbaren Sternzeit 16.07.1998 12<SUP>h</SUP>04<SUP>min</SUP>37<SUP>s</SUP>.739
+soll die MESZ berechnet werden. Die Berechnung ist die Umkehrung der Aufgabe
+2 gezeigten Transformation, sie lautet:
+<UL>
+<TABLE BORDER=0 COLS=1 WIDTH="333" BGCOLOR="#000000" >
+<TR><TD><TABLE BORDER=0 COLS=1 WIDTH="331" BGCOLOR="#FFBB44" >
+<TR><TD>
+<IMG SRC="Image66.gif" HEIGHT=21 WIDTH=329>
+</TD></TR></TABLE></TD></TR></TABLE>
+</UL>
+Die julianischen Daten f&uuml;r die ben&ouml;tigten Zeiten sind:
+<UL>UT(16.07.1998 12<SUP>h</SUP>04<SUP>min</SUP>37<SUP>s</SUP>.739) = 2451011,00321
+<BR>UT(16.07.1998 00<SUP>h</SUP>00<SUP>min</SUP>00<SUP>s</SUP>.000) = 2451010,50000
+<BR>UT(01.01.2000 00<SUP>h</SUP>00<SUP>min</SUP>00<SUP>s</SUP>.000) = 2451545,00000</UL>
+In unserem Fall lauten die einzelnen Gr&ouml;&szlig;en:
+<UL>LAST = 12<SUP>h</SUP>04<SUP>min</SUP>37<SUP>s</SUP>.739 (das Datum
+mu&szlig; hierbei weggelassen werden)
+
+<P><IMG SRC="Image64.gif" HEIGHT=18 WIDTH=13> = 13&deg;20’50’’.000 = 00<SUP>h</SUP>53<SUP>min</SUP>23<SUP>s</SUP>.3333
+
+<P>EoE = -00<SUP>h</SUP>00<SUP>min</SUP>00<SUP>s</SUP>.4351</UL>
+
+<DIR>
+<DIR>mit t = -0,014633812,<IMG SRC="Image67.gif" HEIGHT=21 WIDTH=141 ALIGN=ABSCENTER>
+und&nbsp;<IMG SRC="Image68.gif" HEIGHT=22 WIDTH=158 ALIGN=ABSCENTER></DIR>
+
+
+<P>A = -19<SUP>h</SUP>34<SUP>min</SUP>31<SUP>s</SUP>.7043
+<DIR>
+
+<P>mit&nbsp;<IMG SRC="Image69.gif" HEIGHT=21 WIDTH=125></DIR>
+</DIR>
+F&uuml;r Tagesbruchteil am 16.07.1998 erhalten wir folglich:
+<UL><IMG SRC="Image70.gif" HEIGHT=21 WIDTH=414></UL>
+Da wir nicht die Zeit UTC suchen, m&uuml;ssen wir jetzt noch 2h addieren
+um die MESZ zu erhalten.
+<UL>
+<TABLE BORDER=0 COLS=1 WIDTH="180" BGCOLOR="#000000" >
+<TR><TD><TABLE BORDER=0 COLS=1 WIDTH="178" BGCOLOR="#FFBB44" >
+<TR><TD>
+MESZ = 17<SUP>h</SUP>34<SUP>min</SUP>09<SUP>s</SUP>.678
+</TD></TR></TABLE></TD></TR></TABLE>
+</UL>
+
+
+<P>(ohne Gew&auml;hr auf Richtigkeit)&nbsp;
+<HR><B><FONT SIZE=-1>Stand:&nbsp;<SCRIPT language="JavaScript">
+<!--
+	document.write(document.lastModified);
+//-->
+</SCRIPT>
+
+&copy; <FONT FACE="cosmic,arial">(<A HREF="http://www.fpk.tu-berlin.de/~max/">Michael
+Gendt</A>,Frank Oheim), Hinweise und Erg&auml;nzungen an <A HREF="mailto:max@fpk.tu-berlin.de">mg</A>
+oder&nbsp;<A HREF="http://www.fpk.tu-berlin.de/~fsgeod/grafik/anre.htm"><IMG SRC="button2.gif" ALT="weiter" BORDER=0 ></A></FONT></FONT></B>
+<BR>&nbsp;
+</BODY>
+</HTML>

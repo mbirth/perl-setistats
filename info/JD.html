@@ -1,0 +1,43 @@
+<HTML>
+<HEAD>
+  <TITLE>Julianisches Datum</TITLE>
+</HEAD>
+<BODY>
+  <SCRIPT LANGUAGE="JavaScript"><!--
+    function juld(frm) {
+      var h = Math.floor(frm.h.value);
+      var m = Math.floor(frm.m.value);
+      var s = Math.floor(frm.s.value);
+      var day = Math.floor(frm.d.value);
+      var month = Math.floor(frm.mo.value);
+      var year = Math.floor(frm.y.value);
+      
+      var hdec = Math.floor(h) + (Math.floor(m) / 60) + (Math.floor(s) / 3600);
+      frm.hdec.value = hdec;
+      
+      year += 4713;  // JD begun 01 Jan 4713 B.C. - 12:00h
+      hdec -= 12;
+      if (hdec<0) { hdec+=24; day--; }
+      
+      var modelta=new Array(0,0,31,59,90,120,151,181,212,243,273,304,334);
+      
+      jdate = Math.floor(year/4) - Math.floor(year/100) + Math.floor(year/400);
+      if (month<3 && year%4==0 && year/100-4*year/400!=0) { jdate--; }
+      jdate += year*365+modelta[month]+day+hdec/24;
+      
+      if (year>1600) { jdate -= 328; }
+         
+      frm.jdate.value = jdate;
+    }
+  
+    // -->
+  </SCRIPT>
+<FORM NAME="jd">
+<INPUT TYPE=text SIZE=2 NAME="h">:<INPUT TYPE=text SIZE=2 NAME="m">.<INPUT TYPE=text SIZE=6 NAME="s" VALUE="00.000"><BR>
+<INPUT TYPE=text SIZE=40 NAME="hdec"><BR>
+<INPUT TYPE=text SIZE=2 NAME="d">.<INPUT TYPE=text SIZE=2 NAME="mo">.<INPUT TYPE=text SIZE=4 NAME="y">
+<P>
+<INPUT TYPE=text SIZE=40 NAME="jdate">
+<P>
+<INPUT TYPE=button VALUE="Calculate" onClick="juld(this.form);">
+</FORM>

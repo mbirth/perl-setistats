@@ -48,10 +48,12 @@ $BIN = "$SETIDIR/setiathome";
 @weekdays = ("Mon","Tue","Wed","Thu","Fri","Sat","Sun");
 @months = ("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
 
-open (GPID, "pidof $BIN|");
+#open (GPID, "pidof $BIN|");
+open (GPID, "ps ax|grep setiathome|grep -v grep|cut -c 1-6|");
 $pid = <GPID>;
 close GPID;
 chomp $pid;
+$pid = int $pid;
 
 if ($pid) {
   open (PINF, "ps lw $pid|");
@@ -60,7 +62,9 @@ if ($pid) {
   close PINF;
   chomp $pinfh, $pinfd;
   $nice=substr $pinfd, (index $pinfh, " NI"), 3;
+  $nice=int $nice;
   $memu=substr $pinfd, (index $pinfh, "  SIZE"), 6;
+  $memu=int $memu;
   $cmdl=substr $pinfd, (index $pinfh, "COMMAND"), (length $pinfd)-(index $pinfh, "COMMAND");
 }
 
@@ -172,7 +176,7 @@ sub StateInfo {
     if ($memu<1000) {
       $memut = "$memu kB";
     } else {
-      $memut = substr ($memu,0,3) . "." . substr ($memu,3,3) . " kB";
+      $memut = substr ($memu,0,(length $memu)-3) . "." . substr ($memu,(length $memu)-3,3) . " kB";
     }
     $CS = "$CS (mem usage: $memut)";
   }
