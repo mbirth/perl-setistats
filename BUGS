@@ -1,0 +1,4 @@
+- the "pidof"-command seems not to work as it should
+  After I built it in, the PID was not found out when I ran the script from
+  my browser, but when running on the commandline, it worked - some days later,
+  it worked in the browser, too .... can anyone tell me why?

@@ -48,10 +48,21 @@ $BIN = "$SETIDIR/setiathome";
 @weekdays = ("Mon","Tue","Wed","Thu","Fri","Sat","Sun");
 @months = ("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
 
-open (GPID, "/sbin/pidof $BIN|");
+open (GPID, "pidof $BIN|");
 $pid = <GPID>;
 close GPID;
 chomp $pid;
+
+if ($pid) {
+  open (PINF, "ps lw $pid|");
+  $pinfh = <PINF>;
+  $pinfd = <PINF>;
+  close PINF;
+  chomp $pinfh, $pinfd;
+  $nice=substr $pinfd, (index $pinfh, " NI"), 3;
+  $memu=substr $pinfd, (index $pinfh, "  SIZE"), 6;
+  $cmdl=substr $pinfd, (index $pinfh, "COMMAND"), (length $pinfd)-(index $pinfh, "COMMAND");
+}
 
 $QS = $ENV{"QUERY_STRING"};
 
@@ -153,6 +164,20 @@ sub StateInfo {
     $CS = "<FONT COLOR=red><B>running</B></FONT> with PID $pid";
   } else {
     $CS = "<FONT COLOR=navy><B>not running</B></FONT> (or couldn't get the PID)";
+  }
+  if ($pid && $nice) {
+    $CS = "$CS and nice $nice";
+  }
+  if ($pid && $memu) {
+    if ($memu<1000) {
+      $memut = "$memu kB";
+    } else {
+      $memut = substr ($memu,0,3) . "." . substr ($memu,3,3) . " kB";
+    }
+    $CS = "$CS (mem usage: $memut)";
+  }
+  if ($pid && $cmdl) {
+    $CS = "$CS<BR><B>Command line:</B> <FONT FACE=\"courier\" STYLE=\"font-size: 12pt;\">$cmdl</FONT>";
   }
   my $progress=&Read($ST, "prog");
   &TableStart("Current State");
@@ -257,10 +282,10 @@ sub Read {
   if ( (index $tmp, $what) != -1 ) {
     (my $trash, $info) = split(/=/,$tmp);
     if ( (length $info) < 1 ) {
-      $info = "\#invalid_entry\#";
+      $info = "#invalid_entry#";
     }
   } else {
-    $info = "\#entry_not_found\#";
+    $info = "#entry_not_found#";
   }
   return $info;
 

@@ -1,0 +1,81 @@
+setistats.pl - SETI@home stats 1.2
+(c)1999 by Markus Birth <mbirth@webwriters.de>
+THIS PROGRAM COMES UNDER THE GPL v2 (see file COPYING).
+Homepage: http://www.webwriters.de/mbirth/
+===============================================================================
+
+Thank you for giving this Perl a chance.
+
+This is my own version of something to get infos about a currently running
+SETI-client. This Perl reads the .txt-files in the SETI-directory and analyzes
+their contents.
+
+NOTE: If the "Work Unit Info" section shows "#cannot_open_file#", the SETI-
+      client should be fetching a new work_unit.txt at that moment.
+      If there are too many "#entry_not_found#"'s in the stats, it could
+      have happened that the SETI-client uses another format for the status-
+      files. If so, visit my page for a possibly new version or mail me.
+
+btw: Every date shown is calculated from the Julian Date in the data files!
+
+
+--==# INSTALLATION #==--
+      ============
+To set the script up, copy it to the cgi-bin of your HTTP-server
+(eg. /usr/local/httpd/cgi-bin) and the files in ./data to a readable directory
+on it (e.g. /usr/local/httpd/htdocs/images/setistats). Now change the paths
+in setistats.pl to the right ones. Example:
+
+$SETIDIR = "/home/jwoo/setiathome";   <--- the directory of the SETI-client
+$IMGDIR = "/images/setistats";        <--- the absolute directory on the SERVER
+
+
+--==# USAGE #==--
+      =====
+Now surf to http://localhost/cgi-bin/setistats.pl (or wherever the script is)!
+If you should get errors or something, you can try to remove the line
+"use CGI::Carp..." from the script.
+
+Note: The finishing times are not the correct ending times, since the perl
+      cannot guess your habits in running the client. But if you run the client
+      at the same times every day and with the same NICE-value, they should
+      almost be exact. The final CPU time should not depend on your running
+      times since the CPU time is only running when the client is. So if
+      you don't change your processor or the nice value, the calculated
+      ending CPU time should be somewhat precise.
+
+If you don't have the nerves to set-up your HTTPD and all this stuff, you
+can alternatively put the stats in a HTML-file .... just run
+
+  >setistats.pl > setistats.html
+  
+Don't forget to previously set the $IMGDIR to a "relative" directory (a dir
+without a leading "/"), e.g. "images". If you set it to "data", you won't have
+to do any further steps. If not, you'll have to rename the directory "data" to
+the name given in $IMGDIR (in our example, it's "images").
+After all this, take your favourite browser (CSS is good!) and load the file
+"setistats.html". You could also write a Shellscript which could do the
+conversion and launch of your browser for you .....
+
+Note: There are still some things which aren't shown by my Perl. But this is
+      just version 1.2 :-). There's much more to come.
+
+
+--==# FINAL NOTES #==--
+      ===========
+The script was developed under Perl 5.004_04 built for i586_linux but it could
+run on previous versions also since it doesn't use any special commands or
+modules. The output of the script contains CSS code - but it should look
+okay on all browsers.
+
+If you have any suggestions, a bug or just want to write someone, mail me under
+mbirth@webwriters.de.
+
+===============================================================================
+
+Greetings go out to:
+
+  - Opera Software (for the nice bargraph)
+  - Jan Rocho <jan@ude.org> (for PerlSETI - it's the reason why I wrote this)
+  - Jens Pilz <AinSon@gmx.net> (for the idea of the "client status")
+  

@@ -1,0 +1,12 @@
+        - TO DO       * DONE
+
+- show all suspicious things from outfile.txt
+* last_wu_time from user_info.txt ??
+* last_result_time from user_info.txt ??
+- key from user_info.txt ??
+- venue from user_info.txt ??
+- params_index from user_info.txt ??
+- JD2HMS without "gmtime" and for dates before 1970
+- better finish time calculation
+- convert data in work_unit.txt to something useful (perhaps an audio file?)
+- one single error message, instead of those many "#cannot_open_file#"s

@@ -1,0 +1,9 @@
+1.2	-added experimental calculation of finishing times (they're NOT exact!)
+        -added testing whether last_wu_time/last_result_time is available
+	-added NICE/memory usage/commandline info
+
+1.1	-added "Client status" for checking whether the client runs
+        -made it Y2K
+	-added "Received/Sent last WU"
+
+1.0	-initial version
