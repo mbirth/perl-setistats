@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# SETI@home stats 1.1 - shows current status of a SETI-client in your browser
+# SETI@home stats 1.2 - shows current status of a SETI-client in your browser
 # Copyright (C)1999 by Markus Birth <mbirth@webwriters.de> - GPL v2
 # http://www.webwriters.de/mbirth/
 
@@ -29,18 +29,24 @@ $IMGDIR  = "/cgi-data/setistats";   # The httpd-path to the images
 $SETIDIR = "/opt/SETI";  # The local path to your SETI-directory
                          # (the place, where all the .txt-files are stored in)
 			 
-$T_BOR = "black";      # Table border
-$T_DBG = "#ffff80";    # Table description (left column) background
-$T_VBG = "#ffffc0";    # Table value (right column) background
+$T_BOR = "black";      # Table border color
+$T_DBG = "#ffff80";    # Table description (left column) background color
+$T_VBG = "#ffffc0";    # Table value (right column) background color
+
+$STARTCALC = 0.1;      # Show finishing times for progress>=$STARTCALC (0.1 = 10%)
+                       # Calculating the times for prog<10% is very useless
 
 ### END OF CONFIGURATION SECTION! ###
-$VERSION = "1.1";
+$VERSION = "1.2";
 
 $ST = "$SETIDIR/state.txt";
 $UI = "$SETIDIR/user_info.txt";
 $WU = "$SETIDIR/work_unit.txt";
 $VI = "$SETIDIR/version.txt";
 $BIN = "$SETIDIR/setiathome";
+
+@weekdays = ("Mon","Tue","Wed","Thu","Fri","Sat","Sun");
+@months = ("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
 
 open (GPID, "/sbin/pidof $BIN|");
 $pid = <GPID>;
@@ -49,7 +55,8 @@ chomp $pid;
 
 $QS = $ENV{"QUERY_STRING"};
 
-print "Content-type: text/html\n\n";
+print "Content-type: text/html\n";
+print "Pragma: no-cache\n\n";
 # print "Expires: Thu Jan 01 00:00:00 1970 GMT\n\n";
 
 # client version: version.txt
@@ -100,8 +107,12 @@ sub UserInfo {
   &TableItem("Postal code", &Read($UI, "postal_code"));
   &TableItem("Country", &Read($UI, "country"));
   &TableItem("Register time", &JD2HMS(&Read($UI, "register_time")) . " (JD " . &ExtrJD(&Read($UI, "register_time")) . ")");
-  &TableItem("Received last WU", &JD2HMS(&Read($UI, "last_wu_time")) . " (JD " . &ExtrJD(&Read($UI, "last_wu_time")) . ")");
-  &TableItem("Sent last WU", &JD2HMS(&Read($UI, "last_result_time")) . " (JD " . &ExtrJD(&Read($UI, "last_result_time")) . ")");
+  if ( &Read($UI, "last_wu_time") > 0 ) {
+    &TableItem("Received last WU", &JD2HMS(&Read($UI, "last_wu_time")) . " (JD " . &ExtrJD(&Read($UI, "last_wu_time")) . ")");
+  }
+  if ( &Read($UI, "last_result_time") > 0 ) {
+    &TableItem("Sent last WU", &JD2HMS(&Read($UI, "last_result_time")) . " (JD " . &ExtrJD(&Read($UI, "last_result_time")) . ")");
+  }
   &TableItem("Work Units", &Read($UI, "nwus") . " received, " . &Read($UI, "nresults") . " sent");
   &TableItem("Total CPU time", &time2HMS(&Read($UI, "total_cpu")));
   &TableStop;
@@ -110,11 +121,10 @@ sub UserInfo {
 sub WorkUnitInfo {
   &TableStart("Work Unit Info");
   &TableItem("Work Unit name", &Read($WU, "name"));
-  &TableItem("Record time (GMT)", &JD2HMS(&Read($WU, "time_recorded")));
-  &TableItem("Record time (JD)", &ExtrJD(&Read($WU, "time_recorded")));
+  &TableItem("Record time", &JD2HMS(&Read($WU, "time_recorded")) . " (JD " . &ExtrJD(&Read($WU, "time_recorded")) . ")");
   &TableItem("Receiver", "Arecibo Radio Observatory (" . &Read($WU, "receiver") . ")");
   &TableItem("Tape version", &Read($WU, "tape_version"));
-  &TableItem("Area", &Read($WU, "start_ra") . " R.A., " . &Read($WU, "start_dec") . " DEC - " . &Read($WU, "end_ra") . " R.A., " . &Read($WU, "end_dec") . " Dec");
+  &TableItem("Area", &Read($WU, "start_ra") . " R.A., " . &Read($WU, "start_dec") . " Dec - " . &Read($WU, "end_ra") . " R.A., " . &Read($WU, "end_dec") . " Dec");
   &TableItem("Angle range", &Read($WU, "angle_range"));
   &TableItem("Subband number", &Read($WU, "subband_number"));
   &TableItem("Subband sample rate", &Read($WU, "subband_sample_rate"));
@@ -144,10 +154,24 @@ sub StateInfo {
   } else {
     $CS = "<FONT COLOR=navy><B>not running</B></FONT> (or couldn't get the PID)";
   }
+  my $progress=&Read($ST, "prog");
   &TableStart("Current State");
   &TableItem("Client status", "$CS");
-  &TableItem("Progress status", &Read($ST, "prog")*100 . "%");
+  &TableItem("Progress status", $progress*100 . "%");
   &TableItem("Unit CPU time", &time2HMS(&Read($ST, "cpu")));
+  if ($progress >= $STARTCALC) {
+    my $finCPU=&Read($ST, "cpu") / &Read($ST, "prog");
+    my $leftCPU=$finCPU-&Read($ST, "cpu");
+    &TableItem("Approx. final CPU time", &time2HMS($finCPU) . " (" . &time2HMS($leftCPU) . " left)");
+  }
+  @wustat = stat $WU;
+  my $lastmod = $wustat[10];
+  &TableItem("Unit download time", &TIME2HMS($lastmod));
+  if ($progress >= $STARTCALC) {
+    my $gonetime = time - $lastmod;
+    my $finaltime = ($gonetime / &Read($ST, "prog"))+$lastmod;
+    &TableItem("Approx. finish time", &TIME2HMS($finaltime) . " (see README!)");
+  }
   &TableItem("Doppler shift rate", &Read($ST, "cr"));
   &TableItem("No. of shifts", &Read($ST, "ncfft"));
   &TableItem("FFT length", &Read($ST, "fl"));
@@ -285,8 +309,6 @@ sub JD2HMS {
   $jd *= 86400;     # days -> seconds
   
   my @tim = gmtime $jd;
-  my @weekdays = ("Mon","Tue","Wed","Thu","Fri","Sat","Sun");
-  my @months = ("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
   
   my $sec = $tim[0];
   if ($sec<10) { $sec = "0" . "$sec"; }
@@ -295,15 +317,31 @@ sub JD2HMS {
   my $hour = $tim[2];
   if ($hour<10) { $hour = "0" . "$hour"; }
   my $mday = $tim[3];
-  # my $month = $tim[4] + 1;
-  # if ($month<10) { $month = "0" . "$month"; }
   my $month = $months[$tim[4]];
   my $year = $tim[5];
   $year += 1900;
   my $wday = $weekdays[$tim[6]];
   my $yday = $tim[7];
   
-  return "$month $mday $year / $hour:$min:$sec";
+  return "$month $mday $year / $hour:$min:$sec GMT";
+}
+
+sub TIME2HMS {
+  my @tim = gmtime shift;
+  my $sec = $tim[0];
+  if ($sec<10) { $sec = "0" . "$sec"; }
+  my $min = $tim[1];
+  if ($min<10) { $min = "0" . "$min"; }
+  my $hour = $tim[2];
+  if ($hour<10) { $hour = "0" . "$hour"; }
+  my $mday = $tim[3];
+  my $month = $months[$tim[4]];
+  my $year = $tim[5];
+  $year += 1900;
+  my $wday = $weekdays[$tim[6]];
+  my $yday = $tim[7];
+  
+  return "$month $mday $year / $hour:$min:$sec GMT";
 }
 
 sub ExtrJD {
